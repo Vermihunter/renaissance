@@ -5,6 +5,7 @@ import org.renaissance.Benchmark;
 import org.renaissance.Benchmark.*;
 import org.renaissance.BenchmarkContext;
 import org.renaissance.BenchmarkResult;
+import org.renaissance.License;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Summary("Executes Neo4j graph queries against an LDBC FinBench-style Cypher workload.")
 @RequiresJvm("17")
 @Repetitions(20)
+@Licenses(License.GPL3)
 @Parameter(name = "ldbc_benchmark", defaultValue = "finbench")
 @Parameter(name = "ldbc_sf", defaultValue = "1.0")
 @Parameter(name = "ldbc_query_dir", defaultValue = "finbench/queries")
