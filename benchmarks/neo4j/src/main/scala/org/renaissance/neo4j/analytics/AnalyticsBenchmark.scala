@@ -325,7 +325,7 @@ class AnalyticsBenchmark(
           r
         )
     ),
-    // Find the number of directors that filmed a movie that had two directors
+    // Find the number of directors that filmed queries.txt movie that had two directors
     // between 1985 and 2010.
     (
       """match (d1: Director)-[: FILMS]->(film: Film)<-[: FILMS]-(d2: Director)
@@ -340,7 +340,7 @@ class AnalyticsBenchmark(
         )
     ),
     // Find the number of 3-cliques of directors, in which directors are adjacent
-    // if they made a movie together after 2005.
+    // if they made queries.txt movie together after 2005.
     (
       """match (d1x: Director)-[: FILMS]->(film1: Film)<-[: FILMS]-(d1y: Director),
         |  (d2x: Director)-[: FILMS]->(film2: Film)<-[: FILMS]-(d2y: Director),

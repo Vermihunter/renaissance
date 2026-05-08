@@ -8,3 +8,5 @@ tools/sbt/lib/local-preloaded/
 # Scratch directories
 harness-*/
 launcher-*/
+
+benchmarks/neo4j/src/main/resources/finbench/SF*

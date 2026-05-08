@@ -1,0 +1,25 @@
+// Parameter generator for tw-13.cypher
+// Generated for the Renaissance Neo4j LDBC/FinBench benchmark.
+//
+// Contract:
+//   - Return one row per parameter set.
+//   - Column names must match the parameters used by tw-13.cypher.
+//   - Diagnostic columns must start with "_" and are not passed to the benchmark query.
+//   - Timestamps are epoch milliseconds.
+//   - Default time window: [2022-01-01, 2023-01-01).
+//
+// Note: these generators target the canonicalized schema used by the supplied
+// Neo4JLDBCAnalytics implementation:
+//   nodes: Account/Person/Company/Loan/Medium with property id
+//   rels: own/apply/repay/deposit/transfer/withdraw/invest/guarantee/signIn
+//   rel timestamp: timestamp
+
+WITH 1672531200000 AS currentTime
+MATCH (p1:Person), (p2:Person)
+WHERE p1.id < p2.id
+RETURN
+  p1.id AS pid1,
+  p2.id AS pid2,
+  currentTime AS currentTime
+ORDER BY pid1 ASC, pid2 ASC
+LIMIT 15

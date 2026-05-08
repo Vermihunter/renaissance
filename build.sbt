@@ -63,7 +63,7 @@ ThisBuild / patchedJavaRelease := None
 //
 // Compilation settings
 //
-val javaRelease = "11"
+val javaRelease = "16"
 val scalaVersion212 = "2.12.20"
 val scalaVersion213 = "2.13.15"
 val scalaVersion3 = "3.3.4"
