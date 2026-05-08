@@ -174,9 +174,13 @@ The following is the complete list of benchmarks, separated into groups.
   \
   Default repetitions: 16; APACHE2 license, MIT distribution; Supported JVM: 11 and later
 
-- `neo4j-analytics` - Executes Neo4j graph queries against a movie database.
+- `neo4j-analytics` - Executes Neo4j graph queries against queries.txt movie database.
   \
   Default repetitions: 20; GPL3 license, GPL3 distribution; Supported JVM: 17 and later
+
+- `neo4j-ldbc` - Executes Neo4j graph queries against an LDBC FinBench-style Cypher workload.
+  \
+  Default repetitions: 20;  license, MIT distribution; Supported JVM: 17 and later
 
 #### functional
 
