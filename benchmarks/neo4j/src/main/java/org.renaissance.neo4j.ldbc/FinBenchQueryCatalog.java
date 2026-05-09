@@ -33,6 +33,7 @@ public final class FinBenchQueryCatalog {
             boolean regenerate
     ) {
         String catalogPath = ResourceIO.joinResourcePath(queryDirResourcePath, catalogFileName);
+        System.out.println("Writing generated params to 991");
 
         if (!ResourceIO.resourceExistsFlexible(catalogPath)) {
             System.out.printf(
@@ -135,7 +136,7 @@ public final class FinBenchQueryCatalog {
     ) {
         String baseName = stripCypherSuffix(queryName);
         Path generatedCachePath = paramCacheDir.resolve(baseName + ".params.generated.csv");
-
+        System.out.println("Writing generated params to 0");
         if (!regenerate && Files.exists(generatedCachePath)) {
             List<Map<String, Object>> cached = readGeneratedParamsCache(generatedCachePath);
             if (!cached.isEmpty()) {
@@ -143,6 +144,7 @@ public final class FinBenchQueryCatalog {
             }
         }
 
+        System.out.println("Writing generated params to 1");
         String staticCsvPath = ResourceIO.joinResourcePath(queryDirResourcePath, baseName + ".params.csv");
 
         if (ResourceIO.resourceExistsFlexible(staticCsvPath)) {
@@ -154,11 +156,12 @@ public final class FinBenchQueryCatalog {
         }
 
         String generatorPath = ResourceIO.joinResourcePath(queryDirResourcePath, baseName + ".params.cypher");
-
+        System.out.println("Writing generated params to 2");
         if (ResourceIO.resourceExistsFlexible(generatorPath)) {
             List<Map<String, Object>> generated = generateParamsForQuery(generatorPath);
 
             if (!generated.isEmpty()) {
+                System.out.println("Writing generated params to " + generatedCachePath);
                 writeGeneratedParamsCache(generatedCachePath, generated);
             }
 

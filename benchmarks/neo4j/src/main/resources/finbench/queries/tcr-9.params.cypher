@@ -1,40 +1,73 @@
 // Parameter generator for tcr-9.cypher
-// Generated for the Renaissance Neo4j LDBC/FinBench benchmark.
+// Safe version for the original unmodified standard query.
 //
-// Contract:
-//   - Return one row per parameter set.
-//   - Column names must match the parameters used by tcr-9.cypher.
-//   - Diagnostic columns must start with "_" and are not passed to the benchmark query.
-//   - Timestamps are epoch milliseconds.
-//   - Default time window: [2022-01-01, 2023-01-01).
-//
-// Note: these generators target the canonicalized schema used by the supplied
-// Neo4JLDBCAnalytics implementation:
-//   nodes: Account/Person/Company/Loan/Medium with property id
-//   rels: own/apply/repay/deposit/transfer/withdraw/invest/guarantee/signIn
-//   rel timestamp: timestamp
+// Important:
+//   Excludes ids outside the exact integer range of JSON/Double-safe numbers.
+//   This prevents Account.id from being corrupted between generation and execution.
 
-WITH 1640995200000 AS start_time, 1672531200000 AS end_time,
-     0.0 AS threshold, 0.0 AS lowerbound, 1000000000.0 AS upperbound
+WITH
+  1640995200000 AS start_time,
+  1672531200000 AS end_time,
+  0.0 AS threshold,
+  0.0 AS lowerbound,
+  1000000000.0 AS upperbound,
+  9007199254740991 AS max_safe_integer
+
 MATCH
   (loan:Loan)-[edge1:deposit]->(mid:Account)-[edge2:repay]->(loan),
   (up:Account)-[edge3:transfer]->(mid)-[edge4:transfer]->(down:Account)
-WHERE edge1.amount > threshold
-  AND start_time < edge1.timestamp AND edge1.timestamp < end_time
+
+  WHERE mid.id IS NOT NULL
+  AND mid.id >= -max_safe_integer
+  AND mid.id <= max_safe_integer
+
+  AND edge1.amount > threshold
+  AND start_time < edge1.timestamp < end_time
+
   AND edge2.amount > threshold
-  AND start_time < edge2.timestamp AND edge2.timestamp < end_time
-  AND lowerbound < edge1.amount / edge2.amount AND edge1.amount / edge2.amount < upperbound
+  AND start_time < edge2.timestamp < end_time
+
+  AND lowerbound < edge1.amount / edge2.amount < upperbound
+
   AND edge3.amount > threshold
-  AND start_time < edge3.timestamp AND edge3.timestamp < end_time
+  AND start_time < edge3.timestamp < end_time
+
   AND edge4.amount > threshold
-  AND start_time < edge4.timestamp AND edge4.timestamp < end_time
-RETURN
+  AND start_time < edge4.timestamp < end_time
+
+WITH
   mid.id AS id,
+  start_time,
+  end_time,
+  threshold,
+  lowerbound,
+  upperbound,
+
+  count(*) AS _matchingRows,
+sum(edge1.amount) AS _originalDepositSum,
+sum(edge2.amount) AS _originalRepaySum,
+sum(edge3.amount) AS _originalTransferInSum,
+sum(edge4.amount) AS _originalTransferOutSum
+
+WHERE _matchingRows > 0
+AND _originalRepaySum IS NOT NULL
+AND _originalTransferOutSum IS NOT NULL
+AND _originalRepaySum <> 0
+AND _originalTransferOutSum <> 0
+
+RETURN
+  id AS id,
   start_time AS start_time,
   end_time AS end_time,
   threshold AS threshold,
   lowerbound AS lowerbound,
   upperbound AS upperbound,
-  count(*) AS _matchingRows
+
+_matchingRows,
+_originalDepositSum,
+_originalRepaySum,
+_originalTransferInSum,
+_originalTransferOutSum
+
 ORDER BY _matchingRows DESC, id ASC
 LIMIT 15
